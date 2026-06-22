@@ -1,74 +1,100 @@
-﻿//Hola SEBASTIAN COMO ESTAS?, mucho gusto
+﻿using System;
+using System.Collections.Generic;
 
-int a, b, c, d;
-int n;
+int firstNumber, secondNumber, result, option;
+PantallaConsola pantalla = new PantallaConsola();
+
+// Registramos las operaciones usando polimorfismo (OCP)
+Dictionary<int, IOperacion> operaciones = new Dictionary<int, IOperacion>
+{
+    { 1, new Suma() },
+    { 2, new Resta() },
+    { 3, new Multiplicacion() },
+    { 4, new Division() }
+};
 
 do
 {
-    Console.WriteLine("Elije una opcion:");
-    Console.WriteLine("1. SUMA");
-    Console.WriteLine("2. RESTA");
-    Console.WriteLine("3. MULTIPLICACION");
-    Console.WriteLine("4. DIVISION");
+    pantalla.MostrarMenu();
+    option = pantalla.PedirNumero();
 
-    n = Convert.ToInt32(Console.ReadLine());
-
-    switch (n)
+    if (!operaciones.ContainsKey(option))
     {
-        case 1:
-            Console.WriteLine("Ingrese el primer numero:");
-            a = Convert.ToInt32(Console.ReadLine());
-
-            Console.WriteLine("Ingrese el segundo numero:");
-            b = Convert.ToInt32(Console.ReadLine());
-
-            c = a + b;
-            Console.WriteLine("El resultado de la suma es: " + c);
-            break;
-
-        case 2:
-            Console.WriteLine("Ingrese el primer numero:");
-            a = Convert.ToInt32(Console.ReadLine());
-
-            Console.WriteLine("Ingrese el segundo numero:");
-            b = Convert.ToInt32(Console.ReadLine());
-
-            d = a - b;
-            Console.WriteLine("El resultado de la resta es: " + d);
-            break;
-
-        case 3:
-            Console.WriteLine("Ingrese el primer numero:");
-            a = Convert.ToInt32(Console.ReadLine());
-
-            Console.WriteLine("Ingrese el segundo numero:");
-            b = Convert.ToInt32(Console.ReadLine());
-
-            c = a * b;
-            Console.WriteLine("El resultado de la multiplicacion es: " + c);
-            break;
-
-        case 4:
-            Console.WriteLine("Ingrese el primer numero:");
-            a = Convert.ToInt32(Console.ReadLine());
-
-            Console.WriteLine("Ingrese el segundo numero:");
-            b = Convert.ToInt32(Console.ReadLine());
-
-            if (b != 0)
-            {
-                d = a / b;
-                Console.WriteLine("El resultado de la division es: " + d);
-            }
-            else
-            {
-                Console.WriteLine("No se puede dividir entre cero");
-            }
-            break;
-
-        default:
-            Console.WriteLine("Opcion no valida, intente nuevamente.");
-            break;
+        Console.WriteLine("Opcion no valida, intente nuevamente.\n");
+        continue;
     }
 
-} while (n >= 1 && n <= 4);
+    firstNumber = pantalla.PedirEntrada("primer");
+    secondNumber = pantalla.PedirEntrada("segundo");
+
+    IOperacion operacionSeleccionada = operaciones[option];
+
+    try
+    {
+        result = operacionSeleccionada.Calcular(firstNumber, secondNumber);
+        pantalla.MostrarResultado(result);
+    }
+    catch (DivideByZeroException)
+    {
+        pantalla.MostrarMensaje("No se puede dividir entre cero");
+    }
+
+} while (option < 1 || option > 4);
+
+public interface IOperacion
+{
+    int Calcular(int num1, int num2);
+}
+
+public class Suma : IOperacion
+{
+    public int Calcular(int num1, int num2) => num1 + num2;
+}
+
+public class Resta : IOperacion
+{
+    public int Calcular(int num1, int num2) => num1 - num2;
+}
+
+public class Multiplicacion : IOperacion
+{
+    public int Calcular(int num1, int num2) => num1 * num2;
+}
+
+public class Division : IOperacion
+{
+    public int Calcular(int num1, int num2)
+    {
+        if (num2 == 0)
+        {
+            throw new DivideByZeroException();
+        }
+
+        return num1 / num2;
+    }
+}
+
+public class PantallaConsola
+{
+    public void MostrarMenu()
+    {
+        Console.WriteLine("Elije una opcion:");
+        Console.WriteLine("1. SUMA");
+        Console.WriteLine("2. RESTA");
+        Console.WriteLine("3. MULTIPLICACION");
+        Console.WriteLine("4. DIVISION");
+    }
+
+    public int PedirNumero() => Convert.ToInt32(Console.ReadLine());
+
+    public int PedirEntrada(string orden)
+    {
+        Console.WriteLine($"Ingrese el {orden} numero:");
+        return Convert.ToInt32(Console.ReadLine());
+    }
+
+    public void MostrarResultado(int valor)
+    {
+        Console.WriteLine($"El resultado es: {valor}\n");
+    }
+}
