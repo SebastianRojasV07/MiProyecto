@@ -1,74 +1,88 @@
-﻿//Hola SEBASTIAN COMO ESTAS?, mucho gusto
+﻿int firstNumber, secondNumber, result, option;
 
-int a, b, c, d;
-int n;
+CalculadoraMatematica calculadora = new CalculadoraMatematica();
+PantallaConsola pantalla = new PantallaConsola();
 
 do
 {
-    Console.WriteLine("Elije una opcion:");
-    Console.WriteLine("1. SUMA");
-    Console.WriteLine("2. RESTA");
-    Console.WriteLine("3. MULTIPLICACION");
-    Console.WriteLine("4. DIVISION");
+    pantalla.MostrarMenu();
+    option = pantalla.PedirNumero();
 
-    n = Convert.ToInt32(Console.ReadLine());
+    if (option < 1 || option > 4)
+    {
+        Console.WriteLine("Opcion no valida, intente nuevamente.\n");
+        continue;
+    }
 
-    switch (n)
+    firstNumber = pantalla.PedirEntrada("primer");
+    secondNumber = pantalla.PedirEntrada("segundo");
+
+    switch (option)
     {
         case 1:
-            Console.WriteLine("Ingrese el primer numero:");
-            a = Convert.ToInt32(Console.ReadLine());
-
-            Console.WriteLine("Ingrese el segundo numero:");
-            b = Convert.ToInt32(Console.ReadLine());
-
-            c = a + b;
-            Console.WriteLine("El resultado de la suma es: " + c);
+            result = calculadora.Sumar(firstNumber, secondNumber);
+            pantalla.MostrarResultado("suma", result);
             break;
 
         case 2:
-            Console.WriteLine("Ingrese el primer numero:");
-            a = Convert.ToInt32(Console.ReadLine());
-
-            Console.WriteLine("Ingrese el segundo numero:");
-            b = Convert.ToInt32(Console.ReadLine());
-
-            d = a - b;
-            Console.WriteLine("El resultado de la resta es: " + d);
+            result = calculadora.Restar(firstNumber, secondNumber);
+            pantalla.MostrarResultado("resta", result);
             break;
 
         case 3:
-            Console.WriteLine("Ingrese el primer numero:");
-            a = Convert.ToInt32(Console.ReadLine());
-
-            Console.WriteLine("Ingrese el segundo numero:");
-            b = Convert.ToInt32(Console.ReadLine());
-
-            c = a * b;
-            Console.WriteLine("El resultado de la multiplicacion es: " + c);
+            result = calculadora.Multiplicar(firstNumber, secondNumber);
+            pantalla.MostrarResultado("multiplicacion", result);
             break;
 
         case 4:
-            Console.WriteLine("Ingrese el primer numero:");
-            a = Convert.ToInt32(Console.ReadLine());
-
-            Console.WriteLine("Ingrese el segundo numero:");
-            b = Convert.ToInt32(Console.ReadLine());
-
-            if (b != 0)
+            if (secondNumber != 0)
             {
-                d = a / b;
-                Console.WriteLine("El resultado de la division es: " + d);
+                result = calculadora.Dividir(firstNumber, secondNumber);
+                pantalla.MostrarResultado("division", result);
             }
             else
             {
                 Console.WriteLine("No se puede dividir entre cero");
             }
             break;
-
-        default:
-            Console.WriteLine("Opcion no valida, intente nuevamente.");
-            break;
     }
 
-} while (n >= 1 && n <= 4);
+} while (option < 1 || option > 4);
+
+
+public class PantallaConsola
+{
+    public void MostrarMenu()
+    {
+        Console.WriteLine("Elije una opcion:");
+        Console.WriteLine("1. SUMA");
+        Console.WriteLine("2. RESTA");
+        Console.WriteLine("3. MULTIPLICACION");
+        Console.WriteLine("4. DIVISION");
+    }
+
+    public int PedirNumero()
+    {
+        return Convert.ToInt32(Console.ReadLine());
+    }
+
+    public int PedirEntrada(string orden)
+    {
+        Console.WriteLine($"Ingrese el {orden} numero:");
+        return Convert.ToInt32(Console.ReadLine());
+    }
+
+    public void MostrarResultado(string operacion, int valor)
+    {
+        Console.WriteLine($"El resultado de la {operacion} es: {valor}\n");
+    }
+}
+
+public class CalculadoraMatematica
+{
+    // Su único trabajo: Hacer matemáticas puras
+    public int Sumar(int num1, int num2) => num1 + num2;
+    public int Restar(int num1, int num2) => num1 - num2;
+    public int Multiplicar(int num1, int num2) => num1 * num2;
+    public int Dividir(int num1, int num2) => num1 / num2;
+}
