@@ -12,17 +12,17 @@ A clean and structured calculator application developed in C#, focusing on Clean
 ## Architecture & Refactoring (Clean Code)
 This project was refactored from a single-block script into a decoupled, professional architecture by solving three major code smells:
 
-### 🛠️ Violation #1: Bad Naming Conventions
+### Violation #1: Bad Naming Conventions
 - **The Problem:** Used generic and confusing variable names (`a`, `b`, `c`, `d`, `n`).
 - **The Refactoring:** Renamed them to self-explanatory variables (`firstNumber`, `secondNumber`, `result`, `option`) to make the code readable without comments.
 
-### 📐 Violation #2: Single Responsibility Principle (SRP) Broken
+### Violation #2: Single Responsibility Principle (SRP) Broken
 - **The Problem:** The main block was handling user interface (UI), flow control, and mathematical calculations all at the same time.
 - **The Refactoring:** Decoupled the responsibilities into independent classes:
   - `PantallaConsola`: Exclusively manages user input and output.
   - `CalculadoraMatematica`: Exclusively handles pure mathematical operations.
 
-### 🧬 Violation #3: Code Duplication (DRY Principle)
+### Violation #3: Code Duplication (DRY Principle)
 - **The Problem:** User prompts and input conversions (`Convert.ToInt32(Console.ReadLine())`) were repeated four times inside the `switch` blocks.
 - **The Refactoring:** Created a reusable method `PedirEntrada()` inside the UI class to handle input globally, eliminating all duplicate code.
 
